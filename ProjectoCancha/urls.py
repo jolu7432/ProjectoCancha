@@ -19,5 +19,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-
+    url(r'^$', 'CanchaAlToque.views.index', name='index'),
 ]
