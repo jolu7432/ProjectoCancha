@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-
+from django.contrib.auth.models import User
 from django.db import models
 
 class Complejo(models.Model):
@@ -32,4 +32,36 @@ class Caracteristicas(models.Model):
 
     def __str__(self):
         return self.nombre
+
+# Create your models here.
+
+class Usuario(User):
+    esCapitan = models.BooleanField()
+    def __str__(self):
+        return self.nombre
+
+class Zona(models.Model):
+    nombre = models.CharField(max_length=200)
+
+class Localidad(models.Model):
+    nombre = models.CharField(max_length=200)
+    cp = models.IntegerField()
+
+class Provincia(models.Model):
+    nombre = models.CharField(max_length=200)
+
+
+class Turno(models.Model):
+    #cancha = models.ForeignKey(Cancha)
+    comienzo = models.DateTimeField()
+    fin = models.DateTimeField()
+    esActivo = models.BooleanField()
+    esCancelado = models.BooleanField()
+    esPerdido = models.BooleanField()
+    esFijo = models.BooleanField()
+    seña = models.ForeignKey(Seña)
+
+class Seña(models.Model):
+    monto = models.FloatField()
+    vencimiento = models.DateTimeField()
 
