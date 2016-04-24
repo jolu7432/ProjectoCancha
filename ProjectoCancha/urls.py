@@ -16,8 +16,9 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+import CanchaAlToque.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', 'CanchaAlToque.views.index', name='index'),
+    url(r'^$', CanchaAlToque.views.index, name='index'),
 ]
