@@ -313,14 +313,14 @@
 						
 					<!-- Contact Form -->
 					<div class="contact-form col-md-6 wow fadeInUp" data-wow-duration="500ms" data-wow-delay="300ms">
-						<form id="contact-form" method="post" action="sendmail.php" role="form">
-						
+						<form id="contact-form" method="post" action="sendEmail">
+
 							<div class="form-group">
-								<input type="text" placeholder="Su Nombre" class="form-control" name="nombre" id="nombre">
+								<input type="text" placeholder="Su Nombre" class="form-control" name="nombre" id="nombre" required>
 							</div>
 							
 							<div class="form-group">
-								<input type="text" placeholder="Su Complejo" class="form-control" name="complejo" id="name">
+								<input type="text" placeholder="Su Complejo" class="form-control" name="complejo" id="complejo">
 							</div>
 							
 							<div class="form-group">
@@ -332,21 +332,20 @@
 							</div>
 							
 							<div class="form-group">
-								<textarea rows="6" placeholder="Mensaje" class="form-control" name="mensaje" id="mensaje"></textarea>	
+								<textarea rows="6" placeholder="Mensaje" class="form-control" name="mensaje" id="mensaje"></textarea>
 							</div>
-							
+
 							<div id="mail-success" class="success">
 								Gracias! Nos contactaremos a la brevedad!
 							</div>
-							
+
 							<div id="mail-fail" class="error">
 								Disculpe, ocurrió un inconveniente. Intente de nuevo. Gracias!
 							</div>
-							
+							  <input type="button" id="contact-submit" class="btn btn-transparent form-control" value="">
 							<div id="cf-submit">
-								<input type="submit" id="contact-submit" class="btn btn-transparent" value="Enviar">
-							</div>						
-							
+                                    <input type="submit" id="contact-submit" value="Enviar" class="btn btn-transparent">
+							</div>
 						</form>
 					</div>
 					<!-- ./End Contact Form -->

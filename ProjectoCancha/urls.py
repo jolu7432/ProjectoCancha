@@ -21,4 +21,5 @@ import CanchaAlToque.views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', CanchaAlToque.views.index, name='index'),
+    url(r'^sendEmail$', CanchaAlToque.views.sendEmail, name='sendEmail'),
 ]
