@@ -1,0 +1,83 @@
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=1 %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+       <meta charset="UTF-8">
+    <title>Cancha Al Toque</title>
+    {# Archivos Meta #}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    {# Fin Archivos Meta #}
+    {# Archivos de Links #}
+    <link href="../static/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/css/style.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css"
+          href="../static/dataTables-1.9.1/css/jquery.dataTables.css">
+    {# Fin Archivos de Links #}
+    {# Archivos de Scripts #}
+    <script src="../static/js/jquery-1.12.2.min.js"></script>
+    <script src="../static/js/responsiveslides.min.js"></script>
+    <script type="text/javascript" src="../static/js/move-top.js"></script>
+    <script type="text/javascript" src="../static/js/easing.js"></script>
+    <script type="text/javascript" charset="UTF-8"
+            src="../static/dataTables-1.9.1/js/jquery.dataTables.min.js"></script>
+    {# Fin Archivos de Scripts #}
+
+    <script type="text/javascript">
+
+            jQuery(document).ready(function ($) {
+
+            });
+
+
+    </script>
+</head>
+<body>
+<div id="contenedor">
+        <h3>Calendario</h3>
+    <div id="contenido">
+
+            <div id="listUsuarios">
+                <table id="example" class="dataTable" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th>Horario</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Email</th>
+                        <th>Empresa</th>
+                        <th>Silo</th>
+                        <th>Operario</th>
+                        <th>Accion</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Horario</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Email</th>
+                        <th>Empresa</th>
+                        <th>Silo</th>
+                        <th>Operario</th>
+                        <th>Accion</th>
+                    </tr>
+                    </tfoot>
+                    <tbody id="tbody">
+                    </tbody>
+                </table>
+            </div>
+    </div>
+</div>
+
+</body>
+</html>

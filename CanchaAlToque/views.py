@@ -23,3 +23,6 @@ def sendEmail(request):
     except:
         return render_to_response('blog.html', context_instance=RequestContext(request))
 
+@csrf_exempt
+def home(request):
+    return render_to_response('home.html', context_instance=RequestContext(request))
