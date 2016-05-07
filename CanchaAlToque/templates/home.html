@@ -13,71 +13,465 @@
 <head>
        <meta charset="UTF-8">
     <title>Cancha Al Toque</title>
-    {# Archivos Meta #}
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    {# Fin Archivos Meta #}
-    {# Archivos de Links #}
-    <link href="../static/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+     <link href="../static/css/bootstrap.css" rel="stylesheet" type="text/css"/>
     <link href="../static/css/style.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" type="text/css"
           href="../static/dataTables-1.9.1/css/jquery.dataTables.css">
-    {# Fin Archivos de Links #}
-    {# Archivos de Scripts #}
-    <script src="../static/js/jquery-1.12.2.min.js"></script>
-    <script src="../static/js/responsiveslides.min.js"></script>
-    <script type="text/javascript" src="../static/js/move-top.js"></script>
-    <script type="text/javascript" src="../static/js/easing.js"></script>
+   <script src="../static/js/jquery-1.12.2.min.js"></script>
     <script type="text/javascript" charset="UTF-8"
             src="../static/dataTables-1.9.1/js/jquery.dataTables.min.js"></script>
-    {# Fin Archivos de Scripts #}
+<script  type="text/javascript" charset="UTF-8" src="../static/js/moment.min.js"></script>
+
+<style>
+    .content-popup {
+            margin: 0px auto;
+            position: relative;
+            padding: 10px;
+            width: 1500px;
+            min-height: 600px;
+            border-radius: 4px;
+        {#            background-color: #FFFFFF;#} box-shadow: 0 2px 5px #666666;
+        }
+
+        .content-popup h2 {
+            color: #48484B;
+            border-bottom: 1px solid #48484B;
+            margin-top: 0;
+            padding-bottom: 4px;
+        }
+
+        #popup {
+            text-align: center;
+            vertical-align: middle;
+            margin: 0px auto;
+            margin-top: 200px;
+            margin-left: 10%;
+            z-index: 999;
+            position: fixed;
+            border-radius: 4px;
+            background-color: #666666;
+            box-shadow: 0 2px 5px #AAFF99;
+            display: none;
+        }
+
+        .popup-overlay {
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 999;
+            display: none;
+            background-color: #777777;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .close {
+            position: absolute;
+            right: 15px;
+        }
+
+        .indicador {
+            left: 0px;
+            top: 0px;
+            position: absolute;
+        }
+
+        .opciones {
+            float: left;
+            top: 25px;
+            display: none;
+            position: absolute;
+        }
+
+        .marco {
+            height: 500px;
+            border: solid;
+            position: relative;
+            background-color: forestgreen;
+        }
+
+        .panelgrafico {
+        {#            height: 110%;#} overflow: hidden;
+            display: none;
+        }
+
+        .grafico {
+            height: 100%;
+        }
+</style>
 
     <script type="text/javascript">
+            $(document).ready(function () {
 
-            jQuery(document).ready(function ($) {
+                var dias = ['Lunes 1','Martes 2'];//,'Miercoles 3','Jueves 4','Viernes 5','Sabado 6','Domingo 7'];
+                var horas = ['11:00','11:30','12:00','12:30','13:00','13:30','14:00'];
+                var turnos = {"Turnos":[
+                    {"nombre":"Cancha 1","dia": "Martes 2","hora": "11:30","duracion":"120" },
+                    {"nombre":"Cancha 2","dia": "Martes 2", "hora": "12:00","duracion":"120" }
+                   // {"nombre":"Cancha 3","dia": "Sabado 6", "hora": "14:00","duracion":"120" },
+                       // {"nombre":"Cancha 3","dia": "Domingo 7", "hora": "15:00","duracion":"90" }
+                ]};
+
+
+
+                $.each(dias,function(index,value){
+                   $('#trHead').append('<th id="'+value+'">' + value);
+                });
+
+
+                var diasCopia = [];
+                var rowspan = [];
+                var column = true;
+                $.each(horas,function(iHoras,vHora){
+                    var tr = $('<tr>').appendTo($('#tBody'));
+                    $('<td>').text(vHora).appendTo(tr);
+                    $.each(dias,function(iDias,vDia){
+                        column = true;
+                        for(var i = 0; i < diasCopia.length;i++){
+                            if(vDia == diasCopia[i]){
+                                column = false;
+                                if(rowspan[i] == 2){
+                                    diasCopia.splice(i,1);
+                                    rowspan.splice(i,1);
+                                }else{
+                                    rowspan[i] = rowspan[i]-1;
+                                }
+                            }
+                        }
+                        var td;
+                        if(column){
+                             td = $('<td id="idtd">').appendTo(tr);
+                                    var table;
+                                    var arrTurnos = turnosDelDia(turnos, vDia, vHora);
+                                    var filas = 0;
+                                    if(arrTurnos.length > 0){
+                                         filas = obtenerFilas(arrTurnos);
+                                        alert(filas);
+                                    }
+
+                                    for(var i = 0; i < filas; i++){
+                                          for(var j =0; j < arrTurnos.length; j++){
+                                                var trIn;
+                                                var tdIn;
+                                                if(i == 0 && j == 0) {
+                                                    table = $('<table style="width:100%; height:100%;">').appendTo(td);
+                                                    var thead = $('<thead>').appendTo(table);
+                                                    var tfoot = $('<tfoot>').appendTo(table);
+                                                    var tbody = $('<tbody>').appendTo(table);
+                                                    trIn = $('<tr>').appendTo(tbody);
+                                                    tdIn = $('<td style="height:100%;">').appendTo(trIn);
+
+                                                    if(arrTurnos[j].duracion/30 != 1){
+                                                        diasCopia.push(vDia);
+                                                        rowspan.push(arrTurnos[j].duracion / 30);
+                                                        td.attr("rowspan", arrTurnos[j].duracion / 30);
+                                                        tdIn.attr("rowspan", arrTurnos[j].duracion / 30);
+                                                    }
+                                                    td.css("backgroundColor", "grey");
+                                                    a = '<a href="#" id="openZoom1"><img border="0" alt="Ampliar" title="Ampliar" width="25" height="25"/></a>';
+                                                    b = '<button id="' + arrTurnos[j].dia + arrTurnos[j].hora + '" title="Editar" class="btn14 mr5 editar" style="width:25px; height:75px;">';
+                                                    $(b).appendTo(tdIn);
+                                                }else{
+                                                    tdIn = $('<td>').appendTo(trIn);
+
+                                                }
+
+                                        }
+                                    }
+
+                             $(table).appendTo(td);
+
+                        }
+                    });
+                });
+
+                function turnosPorDia(arr, dia){
+                    var resp = [];
+                    $.each(arr, function(v,k){
+                        if(k.dia == dia){
+                            resp.push(k);
+                        }
+                    });
+                    return resp;
+
+                }
+
+                function turnosMontados(arr,hora){
+                    var resp =[];
+                    var primerTurnoCargado = false;
+                    for(var i = 0; i < arr.length; i++){
+                        if(i == 0){
+                            if( arr[i].hora == hora){
+                                primerTurnoCargado = true;
+                                 resp.push(arr[i]);
+                            }
+                        }else{
+                             //alert(moment(arr[i-1].hora,'HH:mm').add(arr[i-1].duracion,'m'));
+                            //alert(moment(arr[i].hora,'HH:mm'));
+                            if(primerTurnoCargado) {
+                                if (moment(arr[i - 1].hora, 'HH:mm').add(arr[i - 1].duracion, 'm') >= moment(arr[i].hora, 'HH:mm').add(1,'m')) {
+                                    resp.push(arr[i]);
+                                }
+                            }
+                        }
+                    }
+                    console.log(resp);
+                    //alert(hora);
+                    return resp;
+                }
+
+                function turnosDelDia(arr,dia,hora){
+                    var a = [];
+                    $.each(arr, function (v,k) {
+                       a =  turnosMontados(turnosPorDia(k,dia),hora);
+                    });
+                    return a;
+                }
+
+
+                function obtenerFilas(arr){
+                    var resp = 0;
+                    if(arr.length > 0){
+                        var inicio = moment(arr[0].hora,'HH,mm');
+                        var fin = moment(arr[obtenerPosUltimoTurno(arr)].hora,'HH,mm').add(arr[obtenerPosUltimoTurno(arr)].duracion,'m');
+                        resp = fin.diff(inicio,'minutes') / 30;
+                    }
+                    return resp;
+                }
+
+                function obtenerPosUltimoTurno(arr){
+                    resp = 0;
+                     for(var i = 0; i < arr.length; i++){
+                           if(i != 0){
+                               if(moment(arr[i].hora,'HH,mm').add(arr[i].duracion,'m') >= moment(arr[i-1].hora,'HH,mm').add(arr[i-1].duracion,'m')){
+                                   resp = i;
+                               }
+                           }
+                     }
+                      return resp;
+                }
+
+{#                 if(k.dia == vDia && k.hora == vHora){#}
+{#                                        diasCopia.push(vDia);#}
+{#                                        rowspan.push(k.duracion / 30);#}
+{#                                        td.attr("rowspan", k.duracion / 30);#}
+{#                                        td.css("backgroundColor","grey");#}
+{#                                        td.text(k.dia + k.hora);#}
+{#                                        a = '<a href="#" id="openZoom1"><img border="0" alt="Ampliar" title="Ampliar" width="25" height="25"/></a>';#}
+{#                                        b ='<button id="' + k.dia + k.hora + '" title="Editar" class="btn14 mr5 editar" style="width:25px; height:25px;">';#}
+{#                                        $(b).appendTo(td);#}
+{#                                    }#}
+
+
+                $.each(dias,function(index,value){
+                   $('#trFoot').append('<th id="'+value+'">' + value);
+                });
+
+                 $('#grilla').on('click', '.editar', function () {
+               zoomIn();
+                     $('#zoomGraf').html(this.id);
+            });
+
+                $('#openZoom1').click(function () {
 
             });
+
+              $('#close').click(function () {
+                zoomOut();
+            });
+
+
+
+
+
+/*
+                $.each(turnos, function (index, item) {
+                    console.log(item);
+                    var tr = $('<tr>').appendTo($('#tbody'));
+                    var actualizar = "abmUsuario.jsp";
+                    $('<td>').text(item.nombre).appendTo(tr);
+                    $('<td>').text(item.apellido).appendTo(tr);
+                    $('<td>').text(item.dni).appendTo(tr);
+                    $('<td>').text(item.administrador).appendTo(tr);
+                    $('<td>').text(item.user).appendTo(tr);
+                    $('<td>').text(item.pass).appendTo(tr);
+                    $('<td>').text(item.email).appendTo(tr);
+                    $('<td>').text(item.telefono).appendTo(tr);
+                    var img = $('<td>').appendTo(tr);
+                    var div = $('<div id=d2"' + index + '" class="thumbnail">').appendTo(img);
+                    $('<img src="img/imgUsuarios/' + item.urlImg + '" alt="..." class="img-circle" style="height: 100px" ">').appendTo(div);
+                    var accion = $('<td class="center">').appendTo(tr);
+                    $('<button id="' + item.id + '" title="Editar" class="btn14 mr5 editar"><img src="iconos/editar.png" alt="Editar">').appendTo(accion);
+                    $('<button id="' + item.id + '" title="Borrar" class="btn14 mr5 removeBtn borrar" data-entity-id="21589"><img src="iconos/remove.png" alt="Borrar">').appendTo(accion);
+
+                });
+*/
+
+
+ });
+
+   /*function a(){
+
+                  {% for us in usuarios %}
+                var tr = $('<tr>').appendTo($('#tbody'));
+                $('<td>').text('{{us.username}}').appendTo(tr);
+                $('<td>').text('{{us.first_name}}').appendTo(tr);
+                $('<td>').text('{{us.last_name}}').appendTo(tr);
+                $('<td>').text('{{us.email}}').appendTo(tr);
+                //$('<td>').text('{us.direccion}}').appendTo(tr);
+                $('<td>').text('{{us.empresa}}').appendTo(tr);
+                var silos = $('<td>').appendTo(tr);
+                var combo = $('<select>').appendTo(silos);
+                {% for p in puestos %}
+                    {% if p.user == us %}
+                        $('<option name="{{ p.user }}" value={{ p.silo.id }}>').text('{{ p.silo.ip_asignada }}').appendTo(combo);
+                    {% endif %}
+                {% endfor %}
+                $('<td>').text('{{us.es_operario}}').appendTo(tr);
+                var accion = $('<td>').appendTo(tr);
+                $('<button id="{{ us.id }}" title="Editar" class="editar"><img src="static/images/editar.png" alt="Editar">').appendTo(accion);
+                {% if user.id != us.id %}
+                    $('<button id="{{ us.id }}" title="Borrar" class="borrar"><img src="static/images/remove.png" alt="Borrar">').appendTo(accion);
+                {% endif %}
+            {% endfor %}
+
+
+            $('#example').on('click', '.editar', function () {
+                $('#id_usuarioHidden').val(this.id);
+                $('[name=itemSilo]').each(function (k, y) { // deselecciona todos los silos
+                    $(this).prop('selected', false);
+                });
+                {% for us in usuarios %}
+                    if ({{ us.id }} == this.id) {
+                    $('#id_usuario').val('{{ us.username }}');
+                    $('#id_password').val();
+                    $('#id_email').val('{{ us.email }}');
+                    $('#id_nombre').val('{{ us.first_name }}');
+                    $('#id_apellido').val('{{ us.last_name }}');
+                    //$('#id_direccion').val();
+                    {% for p in puestos %}
+                        {% if p.user == us %}
+                            $('[name=itemSilo]').each(function (k, y) {
+                                if ('{{ p.silo.ip_asignada}}' == y.text) {
+                                    $(this).prop('selected', true);
+                                }
+                            });
+                        {% endif %}
+                    {% endfor %}
+                }
+                {% endfor %}
+            });
+            $('#example').on('click', '.borrar', function () {
+                if (confirm("Esta seguro de Borrar el Usuario?")) {
+                    $.post('borrarUsuario', {idUser: this.id}, function (response) {
+
+                    });
+                    window.setTimeout('location.reload()', 50);
+                }
+            });
+
+};
+*/
+
+
+
+
+
+
+
+ function zoomIn() {
+            $('#popup').fadeIn('slow');
+            $('.popup-overlay').fadeIn('slow');
+            $('.popup-overlay').height($(window).height());
+            return false;
+        }
+
+  function zoomOut() {
+            $('#popup').fadeOut('slow');
+            $('.popup-overlay').fadeOut('slow');
+            return false;
+        }
+
+
 
 
     </script>
 </head>
 <body>
-<div id="contenedor">
-        <h3>Calendario</h3>
-    <div id="contenido">
+  <div id="popup">
+        <div class="content-popup">
+            <div class="close">
+                <a href="#" id="close">
+                    <img src="static/images/icon_cerrar.png" border="0" alt="Cerrar" title="Cerrar" width="25"
+                         height="25"/></a></div>
+            <br/>
+            <br/>
 
-            <div id="listUsuarios">
-                <table id="example" class="dataTable" cellspacing="0" width="100%">
-                    <thead>
-                    <tr>
-                        <th>Horario</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Email</th>
-                        <th>Empresa</th>
-                        <th>Silo</th>
-                        <th>Operario</th>
-                        <th>Accion</th>
+            <div style="height: 600px">
+                <div id="zoomGraf" style="height: 100%;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+      <div class="table-responsive">
+                <table id="grilla" class="table table-hover" cellspacing="1" width="100%">
+                    <thead class="thead-inverse">
+                    <tr id="trHead">
+                        <th>Horario/Dias</th>
                     </tr>
                     </thead>
                     <tfoot>
-                    <tr>
-                        <th>Horario</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Email</th>
-                        <th>Empresa</th>
-                        <th>Silo</th>
-                        <th>Operario</th>
-                        <th>Accion</th>
+                    <tr id="trFoot">
+                        <th>Horario/Dias</th>
                     </tr>
                     </tfoot>
-                    <tbody id="tbody">
+                    <tbody id="tBody">
                     </tbody>
                 </table>
-            </div>
     </div>
-</div>
+      <div class="col-md-12 text-center">
+      <ul class="pagination pagination-lg pager" id="myPager"></ul>
+      </div>
+
+
 
 </body>
 </html>
+
+
+{##}
+{#$.each(turnos,function(iTurnos,vTurno){#}
+{#                                $.each(vTurno,function(v,k){#}
+{#                                    var table;#}
+{#                                    prueba(vTurno, k.dia, k.hora);#}
+{#                                    if(k.dia == vDia){#}
+{#                                        var trIn#}
+{#                                        var tdIn;#}
+{#                                        if( k.hora == vHora) {#}
+{#                                            table = $('<table>').appendTo(td);#}
+{#                                            var thead = $('<thead>').appendTo(table);#}
+{#                                            var tfoot = $('<tfoot>').appendTo(table);#}
+{#                                            var tbody = $('<tbody>').appendTo(table);#}
+{#                                            trIn = $('<tr>').appendTo(tbody);#}
+{#                                            tdIn = $('<td>').appendTo(trIn);#}
+{##}
+{##}
+{#                                            diasCopia.push(vDia);#}
+{#                                            rowspan.push(k.duracion / 30);#}
+{#                                            td.attr("rowspan", k.duracion / 30);#}
+{#                                            td.css("backgroundColor", "grey");#}
+{#                                            tdIn.attr("rowspan", k.duracion / 30);#}
+{#                                            a = '<a href="#" id="openZoom1"><img border="0" alt="Ampliar" title="Ampliar" width="25" height="25"/></a>';#}
+{#                                            b = '<button id="' + k.dia + k.hora + '" title="Editar" class="btn14 mr5 editar" style="width:25px; height:25px;">';#}
+{#                                            $(b).appendTo(tdIn);#}
+{#                                        }else{#}
+{#                                            tdIn = $('<td>').appendTo(trIn);#}
+{##}
+{#                                        }#}
+{#                                    }#}
+{#                                    $(table).appendTo(td);#}
+{#                                });#}
+{#                            });#}
