@@ -23,4 +23,6 @@ urlpatterns = [
     url(r'^$', CanchaAlToque.views.index, name='index'),
     url(r'^sendEmail$', CanchaAlToque.views.sendEmail, name='sendEmail'),
      url(r'^home$', CanchaAlToque.views.home, name='home'),
+     url(r'^gestion$', CanchaAlToque.views.gestion, name='gestion'),
 ]
+
