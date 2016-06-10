@@ -67,4 +67,5 @@ class Turno(models.Model):
     esPerdido = models.BooleanField()
     esFijo = models.BooleanField()
     senia = models.ForeignKey(Senia)
+#
 
